@@ -123,6 +123,7 @@ from PhysicsTools.BParkingNano.nanoBPark_cff import *
 process = nanoAOD_customizeMuonTriggerBPark(process)
 process = nanoAOD_customizeElectronFilteredBPark(process)
 process = nanoAOD_customizeTrackFilteredBPark(process)
+process = nanoAOD_customizeKllFilteredBPark(process)
 
 # customisation of the process.
 if options.isMC:

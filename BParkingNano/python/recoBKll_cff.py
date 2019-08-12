@@ -2,15 +2,15 @@ import FWCore.ParameterSet.Config as cms
 from PhysicsTools.NanoAOD.common_cff import *
 
 
-process.reconstructB = cms.EDFilter(
+reconstructB = cms.EDProducer(
         "BKllProducer",
          muons = cms.InputTag("muonsBPark:SelectedMuons"),
-         electrons = cms.InputTag("electronsBPark:SelectedElectrons"),
+         electrons = cms.InputTag("electronsForAnalysis:SelectedElectrons"),
          tracks = cms.InputTag("tracksBPark:SelectedTracks"),
          beamSpot= cms.InputTag("offlineBeamSpot"),
          RunParameters = cms.PSet(
            SkipNoRecoBEvt = cms.bool(True),
-           FinalLeptonId = cms.int32(11),
+           FinalLeptonId = cms.int32(13),
            label = cms.string("BKmumu"),
            ptLep1Cut = cms.double(1.5),
            bdtEl1Cut = cms.double(3.0),
@@ -26,11 +26,9 @@ process.reconstructB = cms.EDFilter(
          )
 )
 
-process.nanoSequence *= process.reconstructB
 
 
-
-process.bToKMuMuTable = cms.EDProducer(
+bToKMuMuTable = cms.EDProducer(
     'SimpleCompositeCandidateFlatTableProducer',
     src = cms.InputTag("reconstructB:BKmumu"),
     cut = cms.string(""),
@@ -60,15 +58,9 @@ process.bToKMuMuTable = cms.EDProducer(
     )
 )
 
-process.nanoSequence *= process.bToKMuMuTable
 
-
-
-recoBseq= cms.Sequence (
-   reconstructB
-  +bToKMuMuTable
-)
-
+kllBParkSequence = cms.Sequence(reconstructB)
+kllBParkTables = cms.Sequence(bToKMuMuTable)
 
 
 
