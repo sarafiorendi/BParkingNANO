@@ -114,6 +114,14 @@ void BToKLLBuilder::produce(edm::StreamID, edm::Event &evt, edm::EventSetup cons
       cand.addUserFloat("min_dr", dr_info.first);
       cand.addUserFloat("max_dr", dr_info.second);
       // TODO add meaningful variables
+
+       // george's definition of deltaR
+      if ( deltaR( k_ptr->eta(), k_ptr->phi(), l1_ptr->eta(), l1_ptr->phi() ) < 0.01 &&
+           k_ptr->charge() == l1_ptr->charge() )
+           continue;
+      if ( deltaR( k_ptr->eta(), k_ptr->phi(), l2_ptr->eta(), l2_ptr->phi() ) < 0.01  &&
+           k_ptr->charge() == l2_ptr->charge() )
+           continue;
       
       if( !pre_vtx_selection_(cand) ) continue;
     

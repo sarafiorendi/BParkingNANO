@@ -126,6 +126,31 @@ process = nanoAOD_customizeElectronFilteredBPark(process)
 process = nanoAOD_customizeTrackFilteredBPark(process)
 process = nanoAOD_customizeBToKLL(process)
 
+## my understanding of george's cuts
+process.electronPairsForKee.lep2Selection = cms.string('pt > 0.5 && (userInt("isPF") == 1 || userFloat("unBiased") >= 0)')
+process.electronPairsForKee.preVtxSelection = cms.string(
+        'abs(userCand("l1").vz - userCand("l2").vz) <= 1. && mass() < 5 '
+        '&& mass() > 0 && charge() == 0'
+    )
+
+
+process.BToKee.postVtxSelection = cms.string(
+        'userInt("sv_OK") == 1 && userFloat("sv_prob") > 0.001 '  ##G. has 0.001
+        '&& userFloat("cos_theta_2D") >= 0'
+    )
+    
+process.muonPairsForKmumu.lep1Selection  = cms.string('pt > 1.5')
+process.muonPairsForKmumu.preVtxSelection = cms.string(
+        'abs(userCand("l1").vz - userCand("l2").vz) <= 1. && mass() < 5 '
+        '&& mass() > 0 && charge() == 0'
+    )
+process.BToKmumu.postVtxSelection = cms.string(
+        'userInt("sv_OK") == 1 && userFloat("sv_prob") > 0.001 '  ##G. has 0.001
+        '&& userFloat("cos_theta_2D") >= 0'
+    )
+    
+
+
 # customisation of the process.
 if options.isMC:
     from PhysicsTools.BParkingNano.nanoBPark_cff import nanoAOD_customizeMC
