@@ -128,6 +128,7 @@ BtoXLLTemplateFitter< T >::ReconstructB( float trackMass )
     ROOT::Math::LorentzVector lep1( (leptons[ilep1]).p4() );
     ROOT::Math::LorentzVector lep2( (leptons[ilep2]).p4() );
 
+    double lep_mass = lep1.mass();
     // now loop over tracks and reconstruct  B
     for ( const pat::CompositeCandidate & trk : tracks ){
       
@@ -138,7 +139,6 @@ BtoXLLTemplateFitter< T >::ReconstructB( float trackMass )
       Kaon.SetE( TMath::Sqrt( pow(Kaon.E(),2) + pow(trackMass,2) 
                             - pow(Kaon.M(),2) ) );
 
-    
       // cut on candidate mass and pT
       if ( ( Kaon + lep1 + lep2 ).M() < MBMin_ ||
            ( Kaon + lep1 + lep2 ).M() > MBMax_ ||
@@ -225,11 +225,20 @@ BtoXLLTemplateFitter< T >::ReconstructB( float trackMass )
       }
       // compute new vectors 
       lep1.SetPx ( fitter.Daughter_Momentum( 0 ).x() );
-      lep1.SetPy( fitter.Daughter_Momentum( 0 ).y() );
-      lep1.SetPz( fitter.Daughter_Momentum( 0 ).z() );
+      lep1.SetPy ( fitter.Daughter_Momentum( 0 ).y() );
+      lep1.SetPz ( fitter.Daughter_Momentum( 0 ).z() );
+      lep1.SetE  ( sqrt(fitter.Daughter_Momentum( 0 ).mag2() +
+//                         fitter.Daughter_Momentum( 0 ).z()*fitter.Daughter_Momentum( 0 ).z() +
+                        lep_mass*lep_mass)
+       );
       lep2.SetPx ( fitter.Daughter_Momentum( 1 ).x() );
-      lep2.SetPy( fitter.Daughter_Momentum( 1 ).y() );
-      lep2.SetPz( fitter.Daughter_Momentum( 1 ).z() );
+      lep2.SetPy ( fitter.Daughter_Momentum( 1 ).y() );
+      lep2.SetPz ( fitter.Daughter_Momentum( 1 ).z() );
+      lep2.SetE  ( sqrt(fitter.Daughter_Momentum( 1 ).mag2() +
+//                         fitter.Daughter_Momentum( 1 ).z()*fitter.Daughter_Momentum( 1 ).z() +
+                        lep_mass*lep_mass)
+       );
+      
       cand.addUserFloat( "mll", ( lep1 + lep2 ).M() );
       cands->emplace_back( cand );
     }
