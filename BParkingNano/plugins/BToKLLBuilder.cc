@@ -138,6 +138,15 @@ void BToKLLBuilder::produce(edm::StreamID, edm::Event &evt, edm::EventSetup cons
           fitter.fitted_vtx().z()
           )  
         );
+
+      cand.setP4( 
+         math::PtEtaPhiMLorentzVector(
+                  fitter.fitted_candidate().globalMomentum().perp(),
+                  fitter.fitted_candidate().globalMomentum().eta(),
+                  fitter.fitted_candidate().globalMomentum().phi(),
+                  fitter.fitted_candidate().mass()
+                  )
+                )  ;
       cand.addUserInt("sv_OK" , fitter.success());
       cand.addUserFloat("sv_chi2", fitter.chi2());
       cand.addUserFloat("sv_ndof", fitter.dof()); // float??
