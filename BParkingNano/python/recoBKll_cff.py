@@ -4,7 +4,7 @@ from PhysicsTools.NanoAOD.common_cff import *
 
 reconstructB = cms.EDProducer(
         "BKllProducer",
-         muons = cms.InputTag("muonsBPark:SelectedMuons"),
+         muons = cms.InputTag("muonTrgSelector:SelectedMuons"),
          electrons = cms.InputTag("electronsForAnalysis:SelectedElectrons"),
          tracks = cms.InputTag("tracksBPark:SelectedTracks"),
          beamSpot= cms.InputTag("offlineBeamSpot"),
