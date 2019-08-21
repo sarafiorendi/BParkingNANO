@@ -6,10 +6,10 @@ tracksBPark = cms.EDProducer('TrackMerger',
                              trgMuon    = cms.InputTag("muonTrgSelector:trgMuons"),
                              tracks     = cms.InputTag("packedPFCandidates"),
                              lostTracks = cms.InputTag("lostTracks"),
-                             trkPtCut = cms.double(0.5),    
+                             trkPtCut = cms.double(0.8),    
                              trkEtaCut = cms.double(2.5),
-                             dzTrg_cleaning = cms.double(-1.), ##next step change to 1
-                             drTrg_Cleaning = cms.double(-0.4),  ##next step move to 0.01
+                             dzTrg_cleaning = cms.double(0.7), ##next step change to 1
+                             drTrg_Cleaning = cms.double(-1),  ##next step move to 0.01
                              dcaSig = cms.double(-100000),
                              trkNormChiMin = cms.int32(-1),
                              trkNormChiMax = cms.int32(-1)
@@ -25,7 +25,7 @@ trackBParkTable = cms.EDProducer(
     singleton = cms.bool(False),
     extension = cms.bool(False), 
     variables = cms.PSet(
-         CandVars,
+        CandVars,
         vx = Var("vx()", float, doc="x coordinate of vertex position, in cm", precision=10),
         vy = Var("vy()", float, doc="y coordinate of vertex position, in cm", precision=10),
         vz = Var("vz()", float, doc="z coordinate of vertex position, in cm", precision=10),
