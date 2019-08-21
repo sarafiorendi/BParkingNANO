@@ -54,7 +54,7 @@ BToKmumu = cms.EDProducer(
     # This in principle can be different between electrons and muons
     preVtxSelection = cms.string(
         'pt > 3. && userFloat("min_dr") > 0.01 '
-        '&& mass < 6 && mass > 4.5'
+        '&& mass < 8 && mass > 4.5'
         ),
     postVtxSelection = cms.string(
         'userInt("sv_OK") == 1 && userFloat("sv_prob") > 0.001 '
