@@ -41,6 +41,10 @@ def log(txt, color = 'black'):
 
 
 legacy_mapping = { #mapping between George's Ntuples and Nano
+  'event' : 'event',
+  'ls' : 'luminosityBlock',
+  'run_number' : 'run',
+
   'nmuon' : 'nMuon',
   'muon_pt' : 'Muon_pt',
   'muon_eta' : 'Muon_eta',
@@ -58,6 +62,13 @@ legacy_mapping = { #mapping between George's Ntuples and Nano
   'el_charge' : 'Electron_charge',
   'el_mva_unbiased' : 'Electron_unBiased',
   'el_islowpt' : 'Electron_isLowPt',
+
+  'ntracks' : 'nProbeTracks',
+  'track_pt' : 'ProbeTracks_pt',
+  'track_eta' : 'ProbeTracks_eta',
+  'track_phi' : 'ProbeTracks_phi',
+  'track_charge' : 'ProbeTracks_charge',
+  
   # TODO: Add variables as they are validated and produced
 }
 # invert map as well
@@ -68,12 +79,16 @@ class NanoFrame(object):
     self.uf = uproot.open(infile)
     self.tt = self.uf['demo/mytree'] if legacy else self.uf['Events']
     self.legacy = legacy
+    self.mask = None
 
   def __getitem__(self, key):
-    return self.tt.array(legacy_inverted[key] if self.legacy else key)
+    if self.mask is None:
+      return self.tt.array(legacy_inverted[key] if self.legacy else key)
+    else:
+      return self.tt.array(legacy_inverted[key] if self.legacy else key)[self.mask]
 
   def keys(self):
-    return legacy_mapping.keys() if self.legacy else self.tt.keys()
+    return legacy_inverted.keys() if self.legacy else self.tt.keys()
 
 def byval_validation(v1, v2):
   if not np.isfinite(v1).all() or not np.isfinite(v2).all():
@@ -207,26 +222,38 @@ old_k = set(old.keys())
 new_k = set(new.keys())
 intersection = old_k.intersection(new_k)
 
-log('Branch diff:')
-for branch in (new_k - old_k):
-  v_new = new[branch]
-  if hasattr(v_new, 'content'):
-    v_new = v_new.content
-  plot_branch(v_new, branch)
-  log(' '.join(['+', branch]), 'green')
+## log('Branch diff:')
+## for branch in (new_k - old_k):
+##   v_new = new[branch]
+##   if hasattr(v_new, 'content'):
+##     v_new = v_new.content
+##   if not args.legacy: plot_branch(v_new, branch)
+##   log(' '.join(['+', branch]), 'green')
+## 
+## for branch in (old_k - new_k):
+##   log(' '.join(['-', branch]), 'red')
+## 
+## log('\n\n')
 
-for branch in (old_k - new_k):
-  log(' '.join(['-', branch]), 'red')
-
-log('\n\n')
+oset = set(old['event'])
+nset = set(new['event'])
+evt_inters = nset.intersection(oset)
+isin = np.vectorize(evt_inters.__contains__)
+old.mask = isin(old['event'])
+new.mask = isin(new['event'])
 
 for branch in sorted(intersection):
   v_old = old[branch]
   v_new = new[branch]
+  if branch == 'nProbeTracks': 
+  ##   emsk = (v_old != v_new)
+  ##   print old['run'][emsk][0], new['luminosityBlock'][emsk][0], new['event'][emsk][0]
+  ##   #old['Electron_isLowPt'][emsk][0]
+    set_trace()
 
   if hasattr(v_old, 'content'):
-    v_old = v_old.content
-    v_new = v_new.content
+    v_old = v_old.flatten()
+    v_new = v_new.flatten()
 
   val_valid  = byval_validation(v_old, v_new)
   stat_valid = stat_validation(v_old, v_new, branch, val_valid)

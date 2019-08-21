@@ -61,6 +61,7 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(options.inputFiles),
     secondaryFileNames = cms.untracked.vstring()
 )
+# process.source.eventsToProcess = cms.untracked.VEventRange('317511:367:550328040')
 
 process.options = cms.untracked.PSet(
     wantSummary = cms.untracked.bool(options.wantSummary),
