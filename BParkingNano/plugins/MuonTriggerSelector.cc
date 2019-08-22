@@ -161,7 +161,7 @@ void MuonTriggerSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSe
     for(const pat::Muon & muon : *muons){
       //this is for triggering muon not really need to be configurable
       unsigned int iMuo(&muon - &(muons->at(0)) );
-      if(!(muon.isLooseMuon() && muon.isSoftMuon(PV))) continue;
+      // if(!(muon.isLooseMuon() && muon.isSoftMuon(PV))) continue;
 
       float dRMuonMatching = -1.;
       int recoMuonMatching_index = -1;

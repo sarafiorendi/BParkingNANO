@@ -6,32 +6,6 @@ lowPtGsfElectronLatestID = lowPtGsfElectronID.clone()
 lowPtGsfElectronLatestID.electrons = 'slimmedLowPtElectrons'
 lowPtGsfElectronLatestID.rho = 'fixedGridRhoFastjetAll'
 
-##essentially the commented out can be inside the same loop... no need to have a more loops in an "expensive" object
-'''lowptElectronsWithSeed = cms.EDProducer(
-  'PATLowPtElectronSeedingEmbedder',
-  src = cms.InputTag('slimmedLowPtElectrons'),
-  ptbiasedSeeding = cms.InputTag("lowPtGsfElectronSeedValueMaps","ptbiased","RECO"),
-  unbiasedSeeding = cms.InputTag("lowPtGsfElectronSeedValueMaps","unbiased","RECO"),
-    minBdtUnbiased = cms.double(0.5)
-)
-lowptElectronsForAnalysis = cms.EDFilter(
-  'PATElectronSelector',
-  src = cms.InputTag("lowptElectronsWithSeed"),
-  ## need to add cut on BDT and ID when available 
-  ## pT > 0.5 to accomodate l1 and l2
-  cut = cms.string('pt > 0.5 && eta > -2.4 && eta < 2.4'),
-  )
-pfElectronsForAnalysis = cms.EDFilter(
-  'PATElectronSelector',
-  src = cms.InputTag("slimmedElectrons"),
-  ## can add cut on ID.
-  ## pT > 2 since almost nothing below anyway
-  cut = cms.string("pt > 2 && eta > -2.4 && eta < 2.4"),
-  )
-'''
-
-
-
 
 #Everything can be done here, in one loop and save time :)
 electronsForAnalysis = cms.EDProducer(
@@ -45,15 +19,15 @@ electronsForAnalysis = cms.EDProducer(
   vertexCollection = cms.InputTag("offlineSlimmedPrimaryVertices"),
   ## cleaning wrt trigger muon [-1 == no cut]
   drForCleaning_wrtTrgMuon = cms.double(-1.),
-  dzForCleaning_wrtTrgMuon = cms.double(-1.),
+  dzForCleaning_wrtTrgMuon = cms.double(0.7),
   ## cleaning between pfEle and lowPtGsf
-  drForCleaning = cms.double(0.01),
-  dzForCleaning = cms.double(0.01),
-  ptMin = cms.double(1.),
-  etaMax = cms.double(2.5),
-    bdtMin = cms.double(0), #this cut can be used to deactivate low pT e if set to >12
+  drForCleaning = cms.double(0.03),
+  dzForCleaning = cms.double(0.7),
+  ptMin = cms.double(0.5),
+  etaMax = cms.double(999.),
+  bdtMin = cms.double(-4), #this cut can be used to deactivate low pT e if set to >12
   useGsfModeForP4 = cms.bool(True),
-    sortOutputCollections = cms.bool(True)
+  sortOutputCollections = cms.bool(True)
 )
 
 electronBParkTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
