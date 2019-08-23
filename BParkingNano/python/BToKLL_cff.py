@@ -9,7 +9,8 @@ electronPairsForKee = cms.EDProducer(
     lep2Selection = cms.string('pt > 0.5 && (userInt("isPF") == 1 || userFloat("unBiased") >= -4)'),
     preVtxSelection = cms.string(
         'abs(userCand("l1").vz - userCand("l2").vz) <= 1. && mass() < 5 '
-        '&& mass() > 0 && charge() == 0 && userFloat("lep_deltaR") > 0.03'
+        '&& mass() > 0 && charge() == 0 '
+#         '&& mass() > 0 && charge() == 0 && userFloat("lep_deltaR") > 0.03'
     ),
     postVtxSelection = cms.string('userFloat("sv_chi2") < 998 && userFloat("sv_prob") > 0'),
 )
@@ -23,12 +24,17 @@ BToKee = cms.EDProducer(
     beamSpot = cms.InputTag("offlineBeamSpot"),
     kaonSelection = cms.string(''),
     preVtxSelection = cms.string(
-        'pt > 3. && userFloat("min_dr") > 0.01 '
-        '&& mass < 6 && mass > 4.5'
+        'pt >= 3. && userFloat("l1K_dr") > 0.001 && userFloat("l2K_dr") > 0.001 '
+        '&& mass <= 6 && mass >= 4.5'
+#         'pt > 3. && userFloat("min_dr") > 0.01 '
+#         '&& mass < 6 && mass > 4.5'
         ),
     postVtxSelection = cms.string(
-        'userInt("sv_OK") == 1 && userFloat("sv_prob") > 0.001 '
-        '&& userFloat("fitted_cos_theta_2D") >= 0'
+        'userInt("sv_OK") == 1 && userFloat("sv_prob") > 0.00000001 '
+        '&& userFloat("cos_theta_2D") >= 0'
+#         '&& userFloat("fitted_cos_theta_2D") >= 0'
+#         '&& userFloat("fitted_mass") > 4.5 && userFloat("fitted_mass") < 6.'
+#         'userInt("sv_OK") == 1 && userFloat("sv_prob") > 0.001 '
     )
 )
 
@@ -36,10 +42,13 @@ muonPairsForKmumu = cms.EDProducer(
     'DiMuonBuilder',
     src = cms.InputTag('muonTrgSelector', 'SelectedMuons'),
     transientTracksSrc = cms.InputTag('muonTrgSelector', 'SelectedTransientMuons'),
-    lep1Selection = cms.string('pt > 1.5'),
-    lep2Selection = cms.string(''),
-    preVtxSelection = cms.string('abs(userCand("l1").vz - userCand("l2").vz) <= 1. && mass() < 5 '
-                                 '&& mass() > 0 && charge() == 0'),
+    lep1Selection = cms.string('pt > 1'),
+    lep2Selection = cms.string('pt > 1'),
+#     lep1Selection = cms.string('pt > 1.5'),
+#     lep2Selection = cms.string(''),
+    preVtxSelection = cms.string('mass() < 5  && mass() > 0 && charge() == 0'),
+#     preVtxSelection = cms.string('abs(userCand("l1").vz - userCand("l2").vz) <= 1. && mass() < 5 '
+#                                  '&& mass() > 0 && charge() == 0'),
     postVtxSelection = electronPairsForKee.postVtxSelection,
 )
 
@@ -53,12 +62,14 @@ BToKmumu = cms.EDProducer(
     kaonSelection = cms.string(''),
     # This in principle can be different between electrons and muons
     preVtxSelection = cms.string(
-        'pt > 3. && userFloat("min_dr") > 0.01 '
-        '&& mass < 8 && mass > 4.5'
+        'pt >= 3. && userFloat("l1K_dr") > 0.001 && userFloat("l2K_dr") > 0.001 '
+	'&& mass <= 6 && mass >= 4.5'
+# #         'pt > 3. && userFloat("min_dr") > 0.01 '
         ),
     postVtxSelection = cms.string(
-        'userInt("sv_OK") == 1 && userFloat("sv_prob") > 0.001 '
+        'userInt("sv_OK") == 1 && userFloat("sv_prob") > 0.00000001 '
         '&& userFloat("fitted_cos_theta_2D") >= 0'
+#         '&& userFloat("fitted_mass") > 4.5 && userFloat("fitted_mass") < 6.'
     )
 )
 

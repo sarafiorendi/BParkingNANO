@@ -113,6 +113,11 @@ void BToKLLBuilder::produce(edm::StreamID, edm::Event &evt, edm::EventSetup cons
       auto dr_info = min_max_dr({l1_ptr, l2_ptr, k_ptr});
       cand.addUserFloat("min_dr", dr_info.first);
       cand.addUserFloat("max_dr", dr_info.second);
+
+      // sara, for testing w/ george
+      auto dr_george = llk_dr({l1_ptr, l2_ptr, k_ptr});
+      cand.addUserFloat("l1K_dr", dr_george.first);
+      cand.addUserFloat("l2K_dr", dr_george.second);
       // TODO add meaningful variables
       
       if( !pre_vtx_selection_(cand) ) continue;

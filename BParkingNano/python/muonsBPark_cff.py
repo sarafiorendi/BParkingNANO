@@ -11,7 +11,7 @@ muonTrgSelector = cms.EDProducer("MuonTriggerSelector",
                                  vertexCollection = cms.InputTag("offlineSlimmedPrimaryVertices"),
                                  
                                  ##for the output trigger matched collection
-                                 maxdR_matching = cms.double(0.01), #too tight 0.05 already better + check
+                                 maxdR_matching = cms.double(0.1), #too tight 0.05 already better + check
                                  
                                  ## for the output selected collection (tag + all compatible in dZ)
                                  dzForCleaning_wrtTrgMuon = cms.double(-1.),
