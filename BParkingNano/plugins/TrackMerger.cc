@@ -161,7 +161,7 @@ void TrackMerger::produce(edm::StreamID, edm::Event &evt, edm::EventSetup const 
     float DCABS = DCA.first;
     float DCABSErr = DCA.second;
     float DCASig = (DCABSErr != 0 && float(DCABSErr) == DCABSErr) ? fabs(DCABS/DCABSErr) : -1;
-    if (DCASig >  dcaSig_  && dcaSig_ >0) continue;
+    if (DCASig < dcaSig_  && dcaSig_ >0) continue;
 
     // clean tracks wrt to all muons
     int matchedToMuon       = 0;
