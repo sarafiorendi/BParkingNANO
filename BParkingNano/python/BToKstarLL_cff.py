@@ -8,7 +8,7 @@ electronPairsForKstarEE = cms.EDProducer(
     src = cms.InputTag('electronsForAnalysis', 'SelectedElectrons'),
     transientTracksSrc = cms.InputTag('electronsForAnalysis', 'SelectedTransientElectrons'),
     lep1Selection = cms.string('pt > 1.5 && userFloat("unBiased") >= 3'),
-    lep2Selection = cms.string(''),  
+    lep2Selection = cms.string(''),
     preVtxSelection = cms.string(
         'abs(userCand("l1").vz - userCand("l2").vz) <= 1. && mass() < 5 '
         '&& mass() > 0 && charge() == 0 && userFloat("lep_deltaR") > 0.03'
@@ -34,12 +34,12 @@ KstarToKPi = cms.EDProducer(
         trk1Selection = cms.string('pt > 1.5 && abs(eta)<2.4'), #need optimization   
         trk2Selection = cms.string('pt > 1.0 && abs(eta)<2.4'), #need optimization
         preVtxSelection = cms.string('abs(userCand("trk1").vz - userCand("trk2").vz)<1.0' 
-        ' &&  pt() > 1.0 && ( (mass() < 1.042 && mass() > 0.742)'
+        ' &&  pt() > 2.0 && ( (mass() < 1.042 && mass() > 0.742)'
         ' || (userFloat("barMass") < 1.042 && userFloat("barMass") > 0.742) ) '
         ),
         postVtxSelection = cms.string('userFloat("sv_prob") > 1.e-5'
-        ' && (  (userFloat("fitted_mass")<1.042    && userFloat("fitted_mass")>0.742)'
-        '    || (userFloat("fitted_barMass")<1.042 && userFloat("fitted_barMass")>0.742)  )'
+        ' && (  (userFloat("fitted_mass")<1.042 && userFloat("fitted_mass")>0.742)'
+        ' || (userFloat("fitted_barMass")<1.042 && userFloat("fitted_barMass")>0.742)  )'
 )
 )
 
@@ -66,7 +66,7 @@ BToKstarMuMu = cms.EDProducer(
         'userFloat("sv_prob") > 0.001 '
         '&& userFloat("fitted_cos_theta_2D") >= 0'
         '&& ( (userFloat("fitted_mass") > 4.5 && userFloat("fitted_mass") < 6.)'
-        '  || (userFloat("fitted_barMass") > 4.5 && userFloat("fitted_barMass") < 6.)  )'
+        '|| (userFloat("fitted_barMass") > 4.5 && userFloat("fitted_barMass") < 6.)  )'
     )
 )
 
@@ -90,7 +90,7 @@ BToKstarEE = cms.EDProducer(
         'userFloat("sv_prob") > 0.001 '
         '&& userFloat("fitted_cos_theta_2D") >= 0'
         '&& ( (userFloat("fitted_mass") > 4.5 && userFloat("fitted_mass") < 6.)'
-        '  || (userFloat("fitted_barMass") > 4.5 && userFloat("fitted_barMass") < 6.)  )'
+        '|| (userFloat("fitted_barMass") > 4.5 && userFloat("fitted_barMass") < 6.)  )'
     )
 )
 
