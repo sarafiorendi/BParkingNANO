@@ -46,12 +46,8 @@ extension = {False : 'data', True : 'mc'}
 outputFileNANO = cms.untracked.string('_'.join(['BParkNANO', extension[options.isMC], options.tag])+'.root')
 outputFileFEVT = cms.untracked.string('_'.join(['BParkFullEvt', extension[options.isMC], options.tag])+'.root')
 if not options.inputFiles:
-#     options.inputFiles = ['/store/data/Run2018B/ParkingBPH4/MINIAOD/05May2019-v2/230000/6B5A24B1-0E6E-504B-8331-BD899EB60110.root'] if not options.isMC else \
-    options.inputFiles = ['root://xrootd-local.unl.edu//store/data/Run2018D/ParkingBPH3/MINIAOD/05May2019promptD-v1/270002/93D913AB-BA34-2B40-B676-320B2F0EF969.root'] if not options.isMC else \
-                         ['/store/mc/RunIIAutumn18MiniAOD/BuToKee_Mufilter_SoftQCDnonD_TuneCP5_13TeV-pythia8-evtgen/MINIAODSIM/PUPoissonAve20_BParking_102X_upgrade2018_realistic_v15_ext1-v2/270000/FE888274-B6BF-9A42-A81C-CD7C989FE423.root',
-                          '/store/mc/RunIIAutumn18MiniAOD/BuToKee_Mufilter_SoftQCDnonD_TuneCP5_13TeV-pythia8-evtgen/MINIAODSIM/PUPoissonAve20_BParking_102X_upgrade2018_realistic_v15_ext1-v2/270000/FD264558-46D8-4F4B-8EAC-196D53B0F646.root'
-                         ]
-#                          ['/store/cmst3/group/bpark/BToKmumu_1000Events_MINIAOD.root']
+    options.inputFiles = ['/store/data/Run2018B/ParkingBPH4/MINIAOD/05May2019-v2/230000/6B5A24B1-0E6E-504B-8331-BD899EB60110.root'] if not options.isMC else \
+                         ['/store/cmst3/group/bpark/BToKmumu_1000Events_MINIAOD.root']
 annotation = '%s nevts:%d' % (outputFileNANO, options.maxEvents)
 
 from Configuration.StandardSequences.Eras import eras
@@ -135,22 +131,13 @@ process = nanoAOD_customizeMuonTriggerBPark(process)
 process = nanoAOD_customizeElectronFilteredBPark(process)
 process = nanoAOD_customizeTrackFilteredBPark(process)
 process = nanoAOD_customizeBToKLL(process)
-process = nanoAOD_customizeBToKstarEE(process)
-process = nanoAOD_customizeBToKstarMuMu(process)
 process = nanoAOD_customizeTriggerBitsBPark(process)
-
-# process.BToKee.isoTracksSelection   = cms.string('pt > 0.4 && abs(eta)<2.5')
-# process.BToKmumu.isoTracksSelection = cms.string('pt > 0.4 && abs(eta)<2.5')
-
 
 
 # Path and EndPath definitions
 process.nanoAOD_KMuMu_step = cms.Path(process.nanoSequence + process.nanoBKMuMuSequence + CountBToKmumu )
 process.nanoAOD_Kee_step   = cms.Path(process.nanoSequence + process.nanoBKeeSequence   + CountBToKee   )
-process.nanoAOD_KstarMuMu_step = cms.Path(process.nanoSequence + process.KstarToKPiSequence + process.nanoBKstarMuMuSequence + CountBToKstarMuMu )
-process.nanoAOD_KstarEE_step  = cms.Path(process.nanoSequence + process.KstarToKPiSequence + process.nanoBKstarEESequence + CountBToKstarEE  )
 
-# process.tracksBPark.dcaSig = cms.double(1)
 
 # customisation of the process.
 if options.isMC:
@@ -163,19 +150,14 @@ process.NANOAODoutput_step = cms.EndPath(process.NANOAODoutput)
 
 # Schedule definition
 process.schedule = cms.Schedule(
-#                                 process.nanoAOD_KMuMu_step,
-#                                 process.nanoAOD_Kee_step, 
-                                process.nanoAOD_KstarMuMu_step,
-                                process.nanoAOD_KstarEE_step,
+                                process.nanoAOD_KMuMu_step,
+                                process.nanoAOD_Kee_step, 
                                 process.endjob_step, 
                                 process.NANOAODoutput_step
                                )
 if options.wantFullRECO:
-    process.schedule = cms.Schedule(
-#                                     process.nanoAOD_KMuMu_step,
-#                                     process.nanoAOD_Kee_step, 
-                                    process.nanoAOD_KstarMuMu_step,
-                                    process.nanoAOD_KstarEE_step,
+    process.schedule = cms.Schedule(process.nanoAOD_KMuMu_step,
+                                    process.nanoAOD_Kee_step, 
                                     process.endjob_step, 
                                     process.FEVTDEBUGHLToutput_step, 
                                     process.NANOAODoutput_step
@@ -185,14 +167,10 @@ associatePatAlgosToolsTask(process)
 
 process.NANOAODoutput.SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring(
-#                                    'nanoAOD_KMuMu_step', 
-#                                    'nanoAOD_Kee_step',
-                                   'nanoAOD_KstarMuMu_step',
-                                   'nanoAOD_KstarEE_step',
+                                   'nanoAOD_KMuMu_step', 
+                                   'nanoAOD_Kee_step'
                                    )
 )
-
-
 ### from https://hypernews.cern.ch/HyperNews/CMS/get/physics-validation/3287/1/1/1/1/1.html
 process.add_(cms.Service('InitRootHandlers', EnableIMT = cms.untracked.bool(False)))
 process.NANOAODoutput.fakeNameForCrab=cms.untracked.bool(True)    
